@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "1031514539035",
+    "firebase_url": "https://berdetak-app-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "berdetak-app",
+    "storage_bucket": "berdetak-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1031514539035:android:04db75b0f6a07c24d3a4be",
+        "android_client_info": {
+          "package_name": "com.example.bismillahberdetak"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYDfZ9uFZ6_7DeNjH_5mH62DT37vE81uA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1031514539035:android:e4bf266dc3cdfef0d3a4be",
+        "android_client_info": {
+          "package_name": "com.example.heartmonitorapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYDfZ9uFZ6_7DeNjH_5mH62DT37vE81uA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

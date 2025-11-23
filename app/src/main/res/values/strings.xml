@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BerdeTak Monitor</string>
+
+    <!-- Main Activity -->
+    <string name="heart_rate">Heart Rate</string>
+    <string name="spo2">SpO2</string>
+    <string name="bpm">bpm</string>
+    <string name="percent">%</string>
+    <string name="start_measurement">Start Measurement</string>
+    <string name="stop_measurement">Stop Measurement</string>
+    <string name="measuring">Measuring…</string>
+    <string name="ready">Ready</string>
+    <string name="completed">Completed</string>
+
+    <!-- Connection Status -->
+    <string name="connection_status">Connection Status</string>
+    <string name="firebase_status">Firebase</string>
+    <string name="sensor_status">Sensor</string>
+    <string name="esp32_status">ESP32</string>
+    <string name="connected">Connected</string>
+    <string name="connecting">Connecting</string>
+    <string name="disconnected">Disconnected</string>
+
+    <!-- Progress -->
+    <string name="progress_title">Measurement Progress</string>
+    <string name="seconds_remaining">%d seconds remaining</string>
+    <string name="progress_percent">%d%%</string>
+    <string name="keep_finger_steady">Keep finger steady on sensor</string>
+
+    <!-- History -->
+    <string name="view_history">View History</string>
+    <string name="history_title">Measurement History</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="last_7_days">Last 7 Days</string>
+    <string name="all_time">All Time</string>
+    <string name="custom_date">Custom</string>
+    <string name="select_date_mode">Select Date Mode</string>
+    <string name="single_day">Single Day</string>
+    <string name="date_range">Date Range</string>
+    <string name="select_single_date">Select Date</string>
+    <string name="select_date_range">Select Date Range</string>
+    <string name="no_history">No measurements yet</string>
+    <string name="no_history_desc">Start your first measurement to see history</string>
+
+    <!-- Export CSV -->
+    <string name="export_csv">Export CSV</string>
+    <string name="share_csv">Share History</string>
+    <string name="csv_exported">CSV exported successfully</string>
+    <string name="csv_export_failed">Failed to export CSV</string>
+    <string name="share_via">Share via</string>
+
+    <!-- Notifications -->
+    <string name="notif_channel_name">Measurement Notifications</string>
+    <string name="notif_channel_desc">Notifications for measurement status</string>
+    <string name="notif_measurement_complete">Measurement Complete</string>
+    <string name="notif_measurement_complete_desc">HR: %d bpm, SpO2: %d%%</string>
+    <string name="notif_measurement_error">Measurement Error</string>
+    <string name="notif_finger_removed">Finger removed during measurement</string>
+    <string name="notif_out_of_range">Reading out of physiological range</string>
+
+    <!-- Errors -->
+    <string name="error_title">Error</string>
+    <string name="error_firebase">Firebase connection error</string>
+    <string name="error_sensor">Sensor not responding</string>
+    <string name="error_esp32">ESP32 not connected</string>
+    <string name="error_finger_removed">Finger removed. Please restart measurement.</string>
+    <string name="error_invalid_reading">Invalid reading. Please try again.</string>
+    <string name="error_out_of_range">Reading out of range. Please check sensor.</string>
+
+    <!-- Dialogs -->
+    <string name="dialog_stop_title">Stop Measurement?</string>
+    <string name="dialog_stop_message">Are you sure you want to stop the measurement in progress?</string>
+    <string name="dialog_yes">Yes</string>
+    <string name="dialog_no">No</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancel</string>
+
+    <!-- Health Status -->
+    <string name="health_status">Health Status</string>
+    <string name="status_normal">Normal</string>
+    <string name="status_warning">Warning</string>
+    <string name="status_critical">Critical</string>
+
+    <!-- Guide -->
+    <string name="finger_guide_title">How to Measure</string>
+    <string name="finger_guide_step1">1. Place finger on sensor</string>
+    <string name="finger_guide_step2">2. Keep finger steady for 60 seconds</string>
+    <string name="finger_guide_step3">3. Wait for results</string>
+
+    <!-- Credits -->
+    <string name="based_on_research">Based on peer-reviewed research</string>
+    <string name="reference_journals">PMC6514840, PMC9041243, Europace 2023</string>
+    <string name="algorithm_info">Maxim Integrated Algorithm</string>
+
+    <!-- Date Format -->
+    <string name="date_format_full">MMM dd, yyyy HH:mm</string>
+    <string name="date_format_time">HH:mm</string>
+    <string name="date_format_date">MMM dd, yyyy</string>
+</resources>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary Medical Colors (Brighter for Dark Mode) -->
+    <color name="primary_teal">#00E5D1</color>
+    <color name="primary_teal_dark">#00B8A8</color>
+    <color name="primary_teal_light">#4DFFE9</color>
+
+    <color name="secondary_green">#66BB6A</color>
+    <color name="secondary_green_dark">#4CAF50</color>
+    <color name="secondary_green_light">#A5D6A7</color>
+
+    <!-- Background Colors -->
+    <color name="background_light">#121212</color>
+    <color name="surface_light">#1E1E1E</color>
+    <color name="card_background">#2C2C2C</color>
+
+    <!-- Text Colors -->
+    <color name="text_primary">#E0E0E0</color>
+    <color name="text_secondary">#B0B0B0</color>
+    <color name="text_hint">#757575</color>
+
+    <!-- Chart Colors (Brighter) -->
+    <color name="chart_grid">#424242</color>
+    <color name="waveform_color">#00E676</color>
+
+    <!-- Divider -->
+    <color name="divider">#424242</color>
+</resources>
