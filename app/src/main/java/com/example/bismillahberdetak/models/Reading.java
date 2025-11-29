@@ -14,8 +14,6 @@ public class Reading {
     private String method;
     private String algorithm;
     private String reference;
-
-    // ✅ NEW: For instant readings
     private Boolean hasValidReading;
     private int instantHR;
     private int instantSPO2;
@@ -27,7 +25,6 @@ public class Reading {
     private int progress;
     private String status;
 
-    // Empty constructor for Firebase
     public Reading() {
     }
 
@@ -44,7 +41,6 @@ public class Reading {
         this.reference = reference;
     }
 
-    // Getters and Setters
     public int getHeartRate() {
         return heartRate;
     }
@@ -117,7 +113,6 @@ public class Reading {
         this.reference = reference;
     }
 
-    // ✅ NEW: Getters and setters for instant reading fields
     public Boolean getHasValidReading() {
         return hasValidReading;
     }
@@ -202,7 +197,6 @@ public class Reading {
         return totalSeconds - secondsPassed;
     }
 
-    // Helper methods
     public String getFormattedDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault());
         return sdf.format(new Date(timestamp * 1000));

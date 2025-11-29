@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bismillahberdetak.R;
@@ -37,11 +36,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Reading reading = readings.get(position);
 
-        // Date and time
         holder.textDate.setText(reading.getFormattedDateOnly());
         holder.textTime.setText(reading.getFormattedTime());
 
-        // Readings (just the numbers, no health status)
         holder.textHeartRate.setText(String.valueOf(reading.getHeartRate()));
         holder.textSpo2.setText(String.valueOf(reading.getSpo2()));
     }

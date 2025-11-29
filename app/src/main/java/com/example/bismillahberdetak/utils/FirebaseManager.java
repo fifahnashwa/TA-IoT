@@ -22,7 +22,6 @@ public class FirebaseManager {
     private DatabaseReference databaseReference;
     private DatabaseReference userRef;
 
-    // Listeners
     private ValueEventListener statusListener;
     private ValueEventListener instantReadingListener;
     private ValueEventListener latestListener;
@@ -44,23 +43,22 @@ public class FirebaseManager {
         }
     }
 
-    // ==================== COMMAND METHODS ====================
     public void sendStartCommand(FirebaseCallback<Void> callback) {
         Log.d(TAG, "sendStartCommand() called");
 
         if (userRef == null) {
-            Log.e(TAG, "❌ ERROR: userRef is NULL!");
+            Log.e(TAG, "ERROR: userRef is NULL!");
             if (callback != null) callback.onFailure("Firebase not initialized");
             return;
         }
 
         userRef.child("command").setValue("start")
                 .addOnSuccessListener(aVoid -> {
-                    Log.d(TAG, "✅ START command sent successfully");
+                    Log.d(TAG, "START command sent successfully");
                     if (callback != null) callback.onSuccess(null);
                 })
                 .addOnFailureListener(e -> {
-                    Log.e(TAG, "❌ Failed to send START: " + e.getMessage());
+                    Log.e(TAG, "Failed to send START: " + e.getMessage());
                     if (callback != null) callback.onFailure(e.getMessage());
                 });
     }
@@ -77,7 +75,6 @@ public class FirebaseManager {
                 });
     }
 
-    // ==================== STATUS LISTENER ====================
     public void listenToStatus(FirebaseCallback<String> callback) {
         statusListener = new ValueEventListener() {
             @Override
@@ -99,7 +96,6 @@ public class FirebaseManager {
         userRef.child("status").addValueEventListener(statusListener);
     }
 
-    // ✅ NEW: Listen to instant reading (replaces both progress and instant reading)
     public void listenToInstantReading(FirebaseCallback<Reading> callback) {
         instantReadingListener = new ValueEventListener() {
             @Override
@@ -134,7 +130,6 @@ public class FirebaseManager {
         Log.d(TAG, "Started listening to instantReading");
     }
 
-    // ==================== LATEST READING LISTENER ====================
     public void listenToLatestReading(FirebaseCallback<Reading> callback) {
         latestListener = new ValueEventListener() {
             @Override
@@ -165,7 +160,6 @@ public class FirebaseManager {
         userRef.child("latest").addValueEventListener(latestListener);
     }
 
-    // ==================== HISTORY METHODS ====================
     public void fetchHistory(FirebaseCallback<List<Reading>> callback) {
         userRef.child("readings").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -183,7 +177,6 @@ public class FirebaseManager {
                         }
                     }
 
-                    // Sort by timestamp descending (newest first)
                     Collections.sort(readings, (r1, r2) -> Long.compare(r2.getTimestamp(), r1.getTimestamp()));
 
                     Log.d(TAG, "Fetched " + readings.size() + " readings");
@@ -202,7 +195,6 @@ public class FirebaseManager {
         });
     }
 
-    // ✅ NEW: Fetch last N readings for chart
     public void fetchLastReadings(int limit, FirebaseCallback<List<Reading>> callback) {
         userRef.child("readings")
                 .orderByChild("timestamp")
@@ -219,7 +211,6 @@ public class FirebaseManager {
                                 }
                             }
 
-                            // Sort ascending (oldest first) for chart display
                             Collections.sort(readings, (r1, r2) -> Long.compare(r1.getTimestamp(), r2.getTimestamp()));
 
                             Log.d(TAG, "Fetched last " + readings.size() + " readings for chart");
@@ -275,7 +266,6 @@ public class FirebaseManager {
         userRef.child("readings").addValueEventListener(historyListener);
     }
 
-    // ==================== CONNECTION CHECK ====================
     public void getLastSeen(FirebaseCallback<Long> callback) {
         userRef.child("lastSeen").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -318,7 +308,6 @@ public class FirebaseManager {
         });
     }
 
-    // ==================== CLEANUP ====================
     public void removeStatusListener() {
         if (statusListener != null) {
             userRef.child("status").removeEventListener(statusListener);

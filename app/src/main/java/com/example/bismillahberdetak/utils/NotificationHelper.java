@@ -35,9 +35,6 @@ public class NotificationHelper {
         createNotificationChannel();
     }
 
-    /**
-     * Create notification channel for Android O and above
-     */
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
@@ -52,9 +49,7 @@ public class NotificationHelper {
         }
     }
 
-    /**
-     * Show notification when measurement is complete
-     */
+
     public void showMeasurementCompleteNotification(Reading reading) {
         Intent intent = new Intent(context, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -83,13 +78,9 @@ public class NotificationHelper {
 
         notificationManager.notify(NOTIFICATION_ID_COMPLETE, builder.build());
 
-        // Vibrate
         vibrateSuccess();
     }
 
-    /**
-     * Show notification for measurement error
-     */
     public void showMeasurementErrorNotification(String errorMessage) {
         Intent intent = new Intent(context, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -112,13 +103,9 @@ public class NotificationHelper {
 
         notificationManager.notify(NOTIFICATION_ID_ERROR, builder.build());
 
-        // Vibrate error pattern
         vibrateError();
     }
 
-    /**
-     * Vibrate for successful measurement
-     */
     public void vibrateSuccess() {
         if (vibrator != null && vibrator.hasVibrator()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -129,9 +116,6 @@ public class NotificationHelper {
         }
     }
 
-    /**
-     * Vibrate for error
-     */
     public void vibrateError() {
         if (vibrator != null && vibrator.hasVibrator()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -144,9 +128,6 @@ public class NotificationHelper {
         }
     }
 
-    /**
-     * Vibrate for button click
-     */
     public void vibrateClick() {
         if (vibrator != null && vibrator.hasVibrator()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -156,10 +137,6 @@ public class NotificationHelper {
             }
         }
     }
-
-    /**
-     * Cancel all notifications
-     */
     public void cancelAllNotifications() {
         notificationManager.cancelAll();
     }

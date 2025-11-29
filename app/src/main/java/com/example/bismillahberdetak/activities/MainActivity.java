@@ -28,10 +28,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    private static final long CONNECTION_CHECK_INTERVAL = 10000; // 10 seconds
-    private static final long ESP32_TIMEOUT = 6000; // 3x heartbeat (2s × 3)
-
-    // Views
+    private static final long CONNECTION_CHECK_INTERVAL = 10000;
+    private static final long ESP32_TIMEOUT = 6000;
     private HistoryLineChartView chartView;
     private TextView textHeartRate, textSpo2;
     private TextView textFirebaseStatus, textSensorStatus, textEsp32Status;
@@ -40,14 +38,10 @@ public class MainActivity extends AppCompatActivity {
     private LinearProgressIndicator progressBar;
     private CardView cardProgress;
     private MaterialButton btnStart;
-
-    // Utilities
     private FirebaseManager firebaseManager;
     private NotificationHelper notificationHelper;
     private Handler connectionCheckHandler;
     private Runnable connectionCheckRunnable;
-
-    // State
     private ConnectionStatus connectionStatus;
     private boolean isMeasuring = false;
     private int currentHeartRate = 0;
@@ -63,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
         setupListeners();
         startPeriodicConnectionCheck();
 
-        // Load chart data
         loadChartData();
     }
 
@@ -72,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         Log.d(TAG, "onResume() - Checking connections...");
         checkConnections();
-        loadChartData(); // Refresh chart on resume
+        loadChartData();
     }
 
     @Override
@@ -82,37 +75,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        // Chart
         chartView = findViewById(R.id.chart_view);
 
-        // Readings
         textHeartRate = findViewById(R.id.text_heart_rate);
         textSpo2 = findViewById(R.id.text_spo2);
 
-        // Connection indicators
         indicatorFirebase = findViewById(R.id.indicator_firebase);
         indicatorSensor = findViewById(R.id.indicator_sensor);
         indicatorEsp32 = findViewById(R.id.indicator_esp32);
 
-        // Connection status texts
         textFirebaseStatus = findViewById(R.id.text_firebase_status);
         textSensorStatus = findViewById(R.id.text_sensor_status);
         textEsp32Status = findViewById(R.id.text_esp32_status);
 
-        // Progress
         cardProgress = findViewById(R.id.card_progress);
         progressBar = findViewById(R.id.progress_bar);
         textProgressPercent = findViewById(R.id.text_progress_percent);
         textSecondsRemaining = findViewById(R.id.text_seconds_remaining);
 
-        // Status message
         textStatusMessage = findViewById(R.id.text_status_message);
 
-        // Button
         btnStart = findViewById(R.id.btn_toggle_measurement);
         btnStart.setEnabled(true);
 
-        // Initial state
         connectionStatus = new ConnectionStatus();
         updateConnectionUI();
         resetProgressUI();
@@ -124,13 +109,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupListeners() {
-        // History button
         findViewById(R.id.btn_history).setOnClickListener(v -> {
             notificationHelper.vibrateClick();
             startActivity(new Intent(MainActivity.this, HistoryActivity.class));
         });
 
-        // Toggle button for Start/Stop
         btnStart.setOnClickListener(v -> {
             notificationHelper.vibrateClick();
             Log.d(TAG, "===== BUTTON CLICKED =====");
@@ -153,9 +136,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Firebase listeners
         listenToFirebaseStatus();
-        listenToInstantReading(); // ✅ SINGLE listener for everything
+        listenToInstantReading();
         listenToLatestReading();
     }
 
@@ -167,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
                 if (!isMeasuring) {
                     Log.d(TAG, "Periodic connection check...");
                     checkConnections();
-                    checkESP32Alive(); // ✅ Check ESP32 heartbeat
+                    checkESP32Alive();
                 }
                 connectionCheckHandler.postDelayed(this, CONNECTION_CHECK_INTERVAL);
             }
@@ -184,7 +166,6 @@ public class MainActivity extends AppCompatActivity {
     private void checkConnections() {
         Log.d(TAG, "checkConnections() called");
 
-        // Check Firebase connection
         firebaseManager.checkConnection(new FirebaseManager.FirebaseCallback<Boolean>() {
             @Override
             public void onSuccess(Boolean connected) {
@@ -208,7 +189,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // ✅ NEW: Check ESP32 heartbeat
     private void checkESP32Alive() {
         firebaseManager.getLastSeen(new FirebaseManager.FirebaseCallback<Long>() {
             @Override
@@ -219,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
 
                     Log.d(TAG, "ESP32 last seen: " + timeSinceLastSeen + "s ago");
 
-                    if (timeSinceLastSeen > 6) { // 6 seconds timeout
+                    if (timeSinceLastSeen > 6) {
                         connectionStatus.setEsp32Status(ConnectionStatus.Status.DISCONNECTED);
                         connectionStatus.setSensorStatus(ConnectionStatus.Status.DISCONNECTED);
                         updateConnectionUI();
@@ -248,7 +228,6 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                // ✅ Handle all status values
                 switch (status) {
                     case "ready":
                         connectionStatus.setEsp32Status(ConnectionStatus.Status.CONNECTED);
@@ -263,7 +242,6 @@ public class MainActivity extends AppCompatActivity {
                         connectionStatus.setEsp32Status(ConnectionStatus.Status.CONNECTED);
                         connectionStatus.setSensorStatus(ConnectionStatus.Status.CONNECTED);
                         if (!isMeasuring) {
-                            // ESP32 says measuring but app doesn't know - sync state
                             isMeasuring = true;
                             updateMeasurementUI(true);
                         }
@@ -302,10 +280,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void listenToFirebaseStatus() {
-        // Already handled in checkESP32Connection
     }
 
-    // ✅ SINGLE listener for ALL real-time data (replaces listenToProgress + old instantReading)
     private void listenToInstantReading() {
         firebaseManager.listenToInstantReading(new FirebaseManager.FirebaseCallback<Reading>() {
             @Override
@@ -313,24 +289,18 @@ public class MainActivity extends AppCompatActivity {
                 if (reading != null) {
                     runOnUiThread(() -> {
                         if (isMeasuring) {
-                            // ✅ Check hasValidReading flag
                             Boolean hasValid = reading.getHasValidReading();
 
                             if (hasValid != null && hasValid) {
-                                // Valid reading - update display
                                 Log.d(TAG, "Valid instant: HR=" + reading.getInstantHR() +
                                         ", SpO2=" + reading.getInstantSPO2());
 
-                                // Update readings with instant values
                                 animateValueChange(textHeartRate, reading.getInstantHR());
                                 animateValueChange(textSpo2, reading.getInstantSPO2());
                             } else {
-                                // Invalid reading - don't update, show measuring indicator
                                 Log.d(TAG, "Invalid reading, waiting for valid data...");
-                                // Optional: show loading indicator or keep previous values
                             }
 
-                            // Always update progress bar (regardless of data validity)
                             updateProgressUI(reading);
                         }
                     });
@@ -357,10 +327,9 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(Reading reading) {
                 if (reading != null && reading.getHeartRate() > 0 && reading.getSpo2() > 0) {
                     runOnUiThread(() -> {
-                        // Only update final readings when measurement completes
                         if (!isMeasuring) {
                             updateReadingUI(reading);
-                            loadChartData(); // ✅ Refresh chart after new reading
+                            loadChartData();
                         }
                     });
                 }
@@ -373,7 +342,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // ✅ Load chart data from history
     private void loadChartData() {
         firebaseManager.fetchLastReadings(10, new FirebaseManager.FirebaseCallback<List<Reading>>() {
             @Override
@@ -394,7 +362,6 @@ public class MainActivity extends AppCompatActivity {
     private void startMeasurement() {
         Log.d(TAG, "startMeasurement() called - sending START command to Firebase");
 
-        // Immediate UI feedback
         isMeasuring = true;
         updateMeasurementUI(true);
         textStatusMessage.setText("Measuring,please wait...");
@@ -410,7 +377,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(String error) {
                 Log.e(TAG, "Failed to send START command: " + error);
-                // Revert UI on failure
                 isMeasuring = false;
                 updateMeasurementUI(false);
                 textStatusMessage.setText(R.string.ready);
@@ -439,16 +405,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateConnectionUI() {
         runOnUiThread(() -> {
-            // Firebase
             updateStatusIndicator(indicatorFirebase, textFirebaseStatus, connectionStatus.getFirebaseStatus());
 
-            // Sensor
             updateStatusIndicator(indicatorSensor, textSensorStatus, connectionStatus.getSensorStatus());
 
-            // ESP32
             updateStatusIndicator(indicatorEsp32, textEsp32Status, connectionStatus.getEsp32Status());
 
-            // Update button state
             if (!isMeasuring) {
                 btnStart.setEnabled(connectionStatus.isAllConnected());
             }
@@ -480,7 +442,6 @@ public class MainActivity extends AppCompatActivity {
         textView.setText(text);
     }
 
-    // ✅ Update progress from Reading object (unified data)
     private void updateProgressUI(Reading reading) {
         cardProgress.setVisibility(View.VISIBLE);
         progressBar.setProgress(reading.getProgress());
@@ -492,7 +453,6 @@ public class MainActivity extends AppCompatActivity {
         currentHeartRate = reading.getHeartRate();
         currentSpo2 = reading.getSpo2();
 
-        // Animate value change
         animateValueChange(textHeartRate, currentHeartRate);
         animateValueChange(textSpo2, currentSpo2);
     }
@@ -558,14 +518,12 @@ public class MainActivity extends AppCompatActivity {
         updateMeasurementUI(false);
         resetProgressUI();
 
-        // Hide progress card after a short delay
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             cardProgress.setVisibility(View.GONE);
         }, 1000);
 
         textStatusMessage.setText(R.string.completed);
 
-        // Show notification
         if (currentHeartRate > 0 && currentSpo2 > 0) {
             Reading reading = new Reading();
             reading.setHeartRate(currentHeartRate);
@@ -575,7 +533,6 @@ public class MainActivity extends AppCompatActivity {
 
         Toast.makeText(this, "Measurement completed successfully!", Toast.LENGTH_SHORT).show();
 
-        // ✅ Reload chart with new data
         loadChartData();
     }
 
@@ -619,7 +576,6 @@ public class MainActivity extends AppCompatActivity {
         notificationHelper.showMeasurementErrorNotification(errorMessage);
         notificationHelper.vibrateError();
 
-        // Reset UI properly after error
         isMeasuring = false;
         updateMeasurementUI(false);
         resetProgressUI();

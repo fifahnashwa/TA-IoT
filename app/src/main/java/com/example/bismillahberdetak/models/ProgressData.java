@@ -6,12 +6,10 @@ public class ProgressData {
     private int progress;
     private String status;
 
-    // ✅ NEW: Add real-time readings support
     private int currentAvgSPO2;
     private int currentAvgHR;
     private int validReadings;
 
-    // Empty constructor for Firebase
     public ProgressData() {
     }
 
@@ -22,7 +20,6 @@ public class ProgressData {
         this.status = status;
     }
 
-    // Getters and Setters
     public int getSecondsPassed() {
         return secondsPassed;
     }
@@ -55,7 +52,6 @@ public class ProgressData {
         this.status = status;
     }
 
-    // ✅ NEW: Getters and setters for real-time readings
     public int getCurrentAvgSPO2() {
         return currentAvgSPO2;
     }
@@ -84,7 +80,6 @@ public class ProgressData {
         return totalSeconds - secondsPassed;
     }
 
-    // ✅ NEW: Check if real-time data is available
     public boolean hasRealtimeData() {
         return currentAvgHR > 0 && currentAvgSPO2 > 0;
     }

@@ -31,9 +31,6 @@ public class CSVExporter {
         void onFailure(String error);
     }
 
-    /**
-     * Export readings to CSV file in Downloads folder
-     */
     public static void exportToCSV(Context context, List<Reading> readings, ExportCallback callback) {
         if (readings == null || readings.isEmpty()) {
             callback.onFailure("No data to export");
@@ -41,11 +38,9 @@ public class CSVExporter {
         }
 
         try {
-            // Create filename with timestamp
             String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
             String fileName = FILE_PREFIX + timestamp + FILE_EXTENSION;
 
-            // Get Downloads directory
             File downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
             if (!downloadsDir.exists()) {
                 downloadsDir.mkdirs();
@@ -53,10 +48,8 @@ public class CSVExporter {
 
             File csvFile = new File(downloadsDir, fileName);
 
-            // Create CSV writer
             CSVWriter writer = new CSVWriter(new FileWriter(csvFile));
 
-            // Write header - SIMPLIFIED to 4 columns only
             String[] header = {
                     "Date",
                     "Time",
@@ -73,10 +66,10 @@ public class CSVExporter {
                 Date date = new Date(reading.getTimestamp() * 1000);
 
                 String[] row = {
-                        dateFormat.format(date),           // Date
-                        timeFormat.format(date),           // Time
-                        String.valueOf(reading.getHeartRate()),  // HR
-                        String.valueOf(reading.getSpo2())        // SpO2
+                        dateFormat.format(date),
+                        timeFormat.format(date),
+                        String.valueOf(reading.getHeartRate()),
+                        String.valueOf(reading.getSpo2())
                 };
 
                 writer.writeNext(row);
@@ -93,12 +86,8 @@ public class CSVExporter {
         }
     }
 
-    /**
-     * Share CSV file via intent (Email, WhatsApp, etc.)
-     */
     public static void shareCSV(Context context, File csvFile) {
         try {
-            // Use FileProvider to get content URI for Android 7.0+
             Uri fileUri = FileProvider.getUriForFile(
                     context,
                     context.getPackageName() + ".fileprovider",
@@ -125,9 +114,6 @@ public class CSVExporter {
         }
     }
 
-    /**
-     * Export and immediately share
-     */
     public static void exportAndShare(Context context, List<Reading> readings, ExportCallback callback) {
         exportToCSV(context, readings, new ExportCallback() {
             @Override
@@ -143,9 +129,6 @@ public class CSVExporter {
         });
     }
 
-    /**
-     * Get all CSV files from Downloads
-     */
     public static List<File> getExportedCSVFiles() {
         List<File> csvFiles = new ArrayList<>();
         File downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
@@ -163,10 +146,6 @@ public class CSVExporter {
 
         return csvFiles;
     }
-
-    /**
-     * Delete specific CSV file
-     */
     public static boolean deleteCSVFile(File file) {
         if (file != null && file.exists()) {
             boolean deleted = file.delete();

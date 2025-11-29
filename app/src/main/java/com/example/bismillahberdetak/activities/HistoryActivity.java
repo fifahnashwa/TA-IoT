@@ -39,7 +39,7 @@ public class HistoryActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private HistoryAdapter adapter;
-    private View textEmpty;  // Changed from TextView to View (it's a LinearLayout in XML)
+    private View textEmpty;
     private ChipGroup chipGroupFilter;
     private Chip chipCustom;
     private MaterialButton btnExportCSV, btnShareCSV;
@@ -116,15 +116,12 @@ public class HistoryActivity extends AppCompatActivity {
             }
         });
 
-        // Export CSV button
         btnExportCSV.setOnClickListener(v -> exportCSV());
 
-        // Share CSV button
         btnShareCSV.setOnClickListener(v -> shareCSV());
     }
 
     private void showCustomDatePicker() {
-        // Show dialog to choose: Single Day or Date Range
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.select_date_mode);
 
@@ -135,16 +132,13 @@ public class HistoryActivity extends AppCompatActivity {
 
         builder.setItems(options, (dialog, which) -> {
             if (which == 0) {
-                // Single Day Picker
                 showSingleDatePicker();
             } else {
-                // Date Range Picker
                 showDateRangePicker();
             }
         });
 
         builder.setNegativeButton(R.string.dialog_cancel, (dialog, which) -> {
-            // Uncheck custom chip, revert to previous filter
             uncheckCustomChip();
         });
 
@@ -156,11 +150,9 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
     private void showSingleDatePicker() {
-        // Build constraints (only past dates)
         CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder()
                 .setValidator(DateValidatorPointBackward.now());
 
-        // Build single date picker
         MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
                 .setTitleText(R.string.select_single_date)
                 .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
@@ -168,9 +160,8 @@ public class HistoryActivity extends AppCompatActivity {
                 .build();
 
         datePicker.addOnPositiveButtonClickListener(selection -> {
-            // Set both start and end to same date (single day)
             customStartDate = selection;
-            customEndDate = selection + (24 * 60 * 60 * 1000) - 1; // End of day
+            customEndDate = selection + (24 * 60 * 60 * 1000) - 1;
 
             currentFilter = FilterType.CUSTOM;
             updateCustomChipText();
@@ -189,11 +180,9 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
     private void showDateRangePicker() {
-        // Build constraints (only past dates)
         CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder()
                 .setValidator(DateValidatorPointBackward.now());
 
-        // Build date range picker
         MaterialDatePicker<Pair<Long, Long>> dateRangePicker =
                 MaterialDatePicker.Builder.dateRangePicker()
                         .setTitleText(R.string.select_date_range)
@@ -202,7 +191,7 @@ public class HistoryActivity extends AppCompatActivity {
 
         dateRangePicker.addOnPositiveButtonClickListener(selection -> {
             customStartDate = selection.first;
-            customEndDate = selection.second + (24 * 60 * 60 * 1000) - 1; // End of day
+            customEndDate = selection.second + (24 * 60 * 60 * 1000) - 1;
 
             currentFilter = FilterType.CUSTOM;
             updateCustomChipText();
@@ -226,11 +215,9 @@ public class HistoryActivity extends AppCompatActivity {
         SimpleDateFormat format = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
 
         if (customEndDate != null && !isSameDay(customStartDate, customEndDate)) {
-            // Date range
             String startDateStr = format.format(new Date(customStartDate));
             String endDateStr = format.format(new Date(customEndDate));
 
-            // Smart formatting: "Jan 15 - 20, 2024" if same month
             SimpleDateFormat monthFormat = new SimpleDateFormat("MMM", Locale.getDefault());
             SimpleDateFormat dayFormat = new SimpleDateFormat("dd", Locale.getDefault());
             SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy", Locale.getDefault());
@@ -247,7 +234,6 @@ public class HistoryActivity extends AppCompatActivity {
                 chipCustom.setText(startDateStr + " - " + endDateStr);
             }
         } else {
-            // Single day
             chipCustom.setText(format.format(new Date(customStartDate)));
         }
     }
@@ -264,7 +250,6 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
     private void uncheckCustomChip() {
-        // Revert to previous filter chip
         switch (currentFilter) {
             case TODAY:
                 chipGroupFilter.check(R.id.chip_today);
@@ -375,7 +360,6 @@ public class HistoryActivity extends AppCompatActivity {
             textEmpty.setVisibility(View.GONE);
         }
 
-        // Enable/disable export buttons
         btnExportCSV.setEnabled(!filteredReadings.isEmpty());
         btnShareCSV.setEnabled(!filteredReadings.isEmpty());
     }
@@ -412,7 +396,6 @@ public class HistoryActivity extends AppCompatActivity {
         CSVExporter.exportAndShare(this, filteredReadings, new CSVExporter.ExportCallback() {
             @Override
             public void onSuccess(File file) {
-                // Share intent will be shown automatically
             }
 
             @Override
